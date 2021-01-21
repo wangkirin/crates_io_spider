@@ -1,4 +1,4 @@
-use crates_io_api::{Error, SyncClient, User};
+use crates_io_api::{Error, SyncClient};
 
 fn list_top_dependencies() -> Result<(), Error> {
     // Instantiate the client.
@@ -54,5 +54,5 @@ fn list_reverse_dependencies(softwareName: &str) -> Result<(), Error> {
 }
 
 fn main() {
-    let l1 = list_reverse_dependencies("rayon").unwrap();
+    let _l1 = list_reverse_dependencies("rayon").unwrap();
 }
