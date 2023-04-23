@@ -1,0 +1,11 @@
+language: rust
+rust:
+  - stable
+
+before_install:
+  - rustup component add clippy rustfmt
+
+script:
+  - cargo clippy --verbose
+  - cargo build --verbose --workspace
+  - cargo test --verbose --workspace
