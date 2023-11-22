@@ -1,5 +1,6 @@
 use crates_io_api::{Error, SyncClient};
 
+#[allow(dead_code)]
 fn list_top_dependencies() -> Result<(), Error> {
     // Instantiate the client.
     let client = SyncClient::new(
@@ -20,14 +21,14 @@ fn list_top_dependencies() -> Result<(), Error> {
     Ok(())
 }
 
-fn list_reverse_dependencies(softwareName: &str) -> Result<(), Error> {
+fn list_reverse_dependencies(software_name: &str) -> Result<(), Error> {
     // Instantiate the client.
     let client = SyncClient::new(
         "my-user-agent (my-contact@domain.com)",
         std::time::Duration::from_millis(1000),
     ).unwrap();
     // Retrieve summary data.
-    let reverse_dep = client.crate_reverse_dependencies(softwareName)?;
+    let reverse_dep = client.crate_reverse_dependencies(software_name)?;
     println!(
         "Number of reverse_dependencies {}:",
         reverse_dep.dependencies.len()
@@ -53,6 +54,10 @@ fn list_reverse_dependencies(softwareName: &str) -> Result<(), Error> {
     Ok(())
 }
 
+
+
+
+
 fn main() {
-    let _l1 = list_reverse_dependencies("rayon").unwrap();
+     list_reverse_dependencies("rayon").unwrap();
 }
