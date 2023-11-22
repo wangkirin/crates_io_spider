@@ -5,7 +5,7 @@ fn list_top_dependencies() -> Result<(), Error> {
     let client = SyncClient::new(
         "my-user-agent (my-contact@domain.com)",
         std::time::Duration::from_millis(1000),
-    )?;
+    ).unwrap();
     // Retrieve summary data.
     let summary = client.summary()?;
     for c in summary.most_downloaded {
@@ -25,7 +25,7 @@ fn list_reverse_dependencies(softwareName: &str) -> Result<(), Error> {
     let client = SyncClient::new(
         "my-user-agent (my-contact@domain.com)",
         std::time::Duration::from_millis(1000),
-    )?;
+    ).unwrap();
     // Retrieve summary data.
     let reverse_dep = client.crate_reverse_dependencies(softwareName)?;
     println!(
