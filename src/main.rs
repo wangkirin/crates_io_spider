@@ -1,7 +1,7 @@
-use crates_io_api::{Category, Error as cError, SyncClient};
+use crates_io_api::{Error as cError, SyncClient};
 use csv::ReaderBuilder;
 use std::fs::File;
-use std::{error::Error, io, process};
+use std::error::Error;
 use serde::Serialize;
 
 #[allow(dead_code)]
@@ -81,11 +81,11 @@ fn list_category(software_name: &str) {
 }
 
 #[derive(Debug, Serialize)]
-struct Crate_info {
+struct CrateInfo {
     name: String,
-    // categories: Vec<String>,
     downloads: u64,
     description:String,
+    categories: String,
 }
 
 #[allow(dead_code)]
@@ -102,19 +102,37 @@ fn csv_demo(software_path: &str) -> Result<(), Box<dyn Error>> {
         // The iterator yields Result<StringRecord, Error>, so we check the
         // error here.
         let record = result?;
-        println!("{}", record.as_slice());
+
         let client = SyncClient::new(
             "my-user-agent (my-contact@domain.com)",
             std::time::Duration::from_millis(1000),
         )
         .unwrap();
-        let krate = client.get_crate(record.as_slice()).unwrap();
-        writer.serialize(Crate_info{
-            name: record.as_slice().to_string(),
-            // categories: krate.categories.,
-            downloads: krate.crate_data.downloads,
-            description: krate.crate_data.description.unwrap(),
-        })?;
+        match client.get_crate(record.as_slice()) {
+            Ok(krate)=>{
+                let mut cate_string =String::new();
+                for category in krate.categories {
+                    cate_string.push_str(&category.category);
+                    cate_string.push_str("/");
+                }
+                writer.serialize(CrateInfo {
+                    name: record.as_slice().to_string(),
+                    downloads: krate.crate_data.downloads,
+                    description: krate.crate_data.description.unwrap(),
+                    categories: cate_string,
+                })?;
+                println!("{} OK", record.as_slice());
+            }
+            Err(err)=>{
+                writer.serialize(CrateInfo {
+                    name: record.as_slice().to_string(),
+                    downloads: 0,
+                    description: "".to_string(),
+                    categories: "".to_string(),
+                })?;
+                println!("{} Error:{}", record.as_slice(),err);
+            }
+        }
         writer.flush()?;
     }
     Ok(())
