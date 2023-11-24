@@ -113,7 +113,7 @@ fn csv_demo(software_path: &str) -> Result<(), Box<dyn Error>> {
                 let mut cate_string =String::new();
                 for category in krate.categories {
                     cate_string.push_str(&category.category);
-                    cate_string.push_str("/");
+                    cate_string.push('/');
                 }
                 writer.serialize(CrateInfo {
                     name: record.as_slice().to_string(),
